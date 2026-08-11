@@ -88,19 +88,23 @@ configurable via `reliability=` / `cmd_reliability=`.
 From `sim/bench_dds.py` (cold figures measured in fresh interpreters, since
 rclpy's context stays warm within a process):
 
+Re-measured after the joint-dynamics fix (removing the URDF's placeholder
+`frictionloss=10` dropped friction constraints from the solver and took MuJoCo
+from 7.0 kHz to 50 kHz; the earlier figures in git history are pre-fix):
+
 | Backend | Client loop rate | mean `step()` | p99 |
 |---|---:|---:|---:|
-| `MujocoHand` | **7023 Hz** | 0.142 ms | 0.205 ms |
-| `Ros2Hand`, 100 Hz publisher | 100.0 Hz | 9.999 ms | 10.13 ms |
-| `Ros2Hand`, 333 Hz publisher | 333.0 Hz | 3.003 ms | 3.12 ms |
-| `Ros2Hand`, 500 Hz publisher | 500.0 Hz | 2.000 ms | 2.16 ms |
-| `Ros2Hand`, 1000 Hz publisher | 999.9 Hz | 1.000 ms | 1.14 ms |
+| `MujocoHand` | **50033 Hz** | 0.0199 ms | 0.0449 ms |
+| `Ros2Hand`, 100 Hz publisher | 100.0 Hz | 10.000 ms | 10.14 ms |
+| `Ros2Hand`, 333 Hz publisher | 333.0 Hz | 3.003 ms | 3.21 ms |
+| `Ros2Hand`, 500 Hz publisher | 500.0 Hz | 2.000 ms | 2.25 ms |
+| `Ros2Hand`, 1000 Hz publisher | 1000.0 Hz | 1.000 ms | 1.13 ms |
 
-Identical client code runs **7–70× faster on MuJoCo**, and the ROS2 rate is set
+Identical client code runs **50–500× faster on MuJoCo**, and the ROS2 rate is set
 entirely by the publisher — the match is exact to three significant figures,
 which is the pacing mechanism working as designed rather than a coincidence.
 
-MuJoCo also runs 14× faster than real time (0.142 ms per 2 ms timestep), so a
+MuJoCo also runs 100× faster than real time (0.0199 ms per 2 ms timestep), so a
 client that assumes wall-clock progress will behave differently on the two
 backends even though both honour the interface. Anything timing-sensitive should
 be expressed in control cycles, not seconds, or should read the elapsed

@@ -1,0 +1,36 @@
+# Python dependencies for the Allegro 3F simulation work.
+#
+#   python3.10 -m venv sim/venv
+#   sim/venv/bin/pip install -r requirements.txt
+#
+# Python 3.10 specifically: rclpy ships extensions built against CPython 3.10
+# (_rclpy_pybind11.cpython-310-*.so), so a 3.11+ venv cannot import it. See the
+# README's Setup section.
+#
+# Versions are pinned to what produced the committed results. Relax to >= if you
+# are deliberately testing against newer releases -- but re-run
+# `sim/venv/bin/python sim/build_3f.py` and the test suite afterwards, since the
+# build asserts its own mass and contact properties and would catch a change in
+# MuJoCo's inertia or collision behaviour.
+
+# Runtime: model building, both hand backends, the grasp evaluation.
+mujoco==3.11.0
+numpy==2.2.6
+
+# Tests.
+pytest==9.1.1
+
+# NOT INSTALLABLE HERE, and deliberately absent:
+#
+# rclpy / sensor_msgs -- ship with a ROS 2 distribution, not PyPI. `pip install
+#   rclpy` fails with "No matching distribution found". Get them by sourcing an
+#   install (`source /opt/ros/humble/setup.bash`), which puts them on PYTHONPATH
+#   ahead of this venv. Everything except sim/tests/test_live_dds.py and
+#   sim/bench_dds.py runs without them; those skip automatically when rclpy is
+#   unimportable.
+#
+# scipy -- used only for one-off convex-hull volume measurements while
+#   diagnosing the mesh geometry (documented in build_3f.py's
+#   collision_primitives docstring). No committed module imports it, so it is
+#   not a dependency of anything you can run from the README. Install ad hoc if
+#   you want to reproduce those measurements.
