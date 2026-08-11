@@ -19,9 +19,13 @@ from pathlib import Path
 
 import mujoco
 
+# Resolved relative to sim/, not to the working directory, so the evaluation runs
+# from the repo root as the README documents it.
+SIM_DIR = Path(__file__).resolve().parent
+
 HANDS = {
-    "3F": Path("models/allegro_3f/allegro_3f.xml"),
-    "4F": Path("mujoco_menagerie/wonik_allegro/right_hand.xml"),
+    "3F": SIM_DIR / "models/allegro_3f/allegro_3f.xml",
+    "4F": SIM_DIR / "mujoco_menagerie/wonik_allegro/right_hand.xml",
 }
 
 
