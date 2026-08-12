@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 mujoco_menagerie/
 wonik_3f_reference/
+wonik_4f_reference/
