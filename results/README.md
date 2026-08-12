@@ -35,7 +35,14 @@ everything else records what produced them:
 - `controller` - every `GraspConfig` field
 - `success_criterion` - the thresholds a success is judged against
 - `summary` - success rates and grip-force distribution, precomputed
-- `provenance` - git commit, dirty flag, MuJoCo version, hand model paths
+- `provenance` - git commit, `code_dirty`, MuJoCo version, hand model paths
+
+`code_dirty` reports uncommitted changes under `sim/` only, not the whole tree.
+That scoping is deliberate: an unscoped `git status --porcelain` includes
+untracked files, so it counted the results file being written as an uncommitted
+change and reported true on every first generation regardless of the actual state.
+Scoping to `sim/` also means editing the top-level README, which cannot affect a
+result, no longer flags one.
 
 Read `run.spread_fraction` before comparing a file against any figure. The two
 grasp files differ by more than a factor of two on the 4F, and that difference is
@@ -59,6 +66,6 @@ measurement on one machine, not as a reproducible artifact. The ratio it
 demonstrates (MuJoCo's loop rate being two to three orders of magnitude above the
 ROS2 rate) is robust; the exact figures are not.
 
-If `provenance.git_dirty` is `true`, the working tree had uncommitted changes when
-the file was generated, so `provenance.git_commit` does not fully describe the
-code that produced it. Prefer regenerating from a clean tree.
+If `provenance.code_dirty` is `true`, `sim/` had uncommitted changes when the file
+was generated, so `provenance.git_commit` does not fully describe the code that
+produced it. Prefer regenerating from a clean tree.

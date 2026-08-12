@@ -352,7 +352,14 @@ def provenance(spreads: dict, config: GraspConfig, centres: dict,
         },
         "provenance": {
             "git_commit": git("rev-parse", "HEAD"),
-            "git_dirty": bool(git("status", "--porcelain")),
+            # Scoped to sim/, i.e. the code and model that produced this result.
+            # An unscoped `git status --porcelain` includes UNTRACKED files, so it
+            # counted this very file as dirt: on the first generation into an
+            # as-yet-uncommitted results/ directory it reported dirty=true no
+            # matter what order things were run in. Self-referential and useless.
+            # Scoping also means an edit to the top-level README, which cannot
+            # affect a result, no longer flags it.
+            "code_dirty": bool(git("status", "--porcelain", "--", "sim")),
             "mujoco": mujoco.__version__,
             "hand_models": {
                 t: str(p.relative_to(REPO)) for t, p in HANDS.items()

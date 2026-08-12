@@ -221,7 +221,9 @@ def main() -> None:
             },
             "provenance": {
                 "git_commit": git("rev-parse", "HEAD"),
-                "git_dirty": bool(git("status", "--porcelain")),
+                # Scoped to sim/: see the equivalent note in grasp_eval.py. An
+                # unscoped check counts this output file as an uncommitted change.
+                "code_dirty": bool(git("status", "--porcelain", "--", "sim")),
                 "mujoco": mujoco.__version__,
                 "ros_distro": os.environ.get("ROS_DISTRO", "unset"),
                 "rmw": os.environ.get("RMW_IMPLEMENTATION", "default"),
