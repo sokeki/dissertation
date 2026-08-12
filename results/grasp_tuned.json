@@ -82,8 +82,8 @@
     }
   },
   "provenance": {
-    "git_commit": "f0de4bbad6e174b6553779fb4274ba23b452dbfa",
-    "git_dirty": true,
+    "git_commit": "0759b6a5d3b4eef532dee1107ad4c4f6de337810",
+    "code_dirty": false,
     "mujoco": "3.11.0",
     "hand_models": {
       "3F": "sim/models/allegro_3f/allegro_3f.xml",
